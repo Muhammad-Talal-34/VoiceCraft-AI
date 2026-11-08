@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Test, type-checker, and build artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+
+# Local environment and logs
+.env
+.env.*
+!.env.example
+*.log
+
+# Large pretrained model weights (keep model configuration and tokenizer files)
+urdu_model/*.bin
+urdu_model/*.safetensors
+urdu_model/*.pt
+urdu_model/*.pth
+urdu_model/*.ckpt
+
+# Generated audio
+/generated_voice.wav
+/static/audio/*.wav
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.idea/

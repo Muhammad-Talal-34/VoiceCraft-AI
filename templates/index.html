@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceCraft AI | Professional Urdu TTS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* ---------------- CSS Variables & Reset ---------------- */
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --btn-gradient: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+            /* Vibrant professional blue */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Ensure HTML and Body take full height for proper footer placement */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Animated Blobs */
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: #6366f1;
+            border-radius: 50%;
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: #ec4899;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(30px, 50px) scale(1.1);
+            }
+        }
+
+        /* ---------------- Header ---------------- */
+        header {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #0ea5e9;
+        }
+
+        /* ---------------- Main App Container ---------------- */
+        /* Flex: 1 0 auto pushes the footer to the bottom securely */
+        main {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            gap: 4rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 2rem 0;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .app-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.2rem;
+            color: white;
+            font-size: 1.4rem;
+            font-family: 'Jameel Noori Nastaleeq', system-ui, sans-serif;
+            line-height: 1.8;
+            resize: vertical;
+            min-height: 150px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+        }
+
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--btn-gradient);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4);
+        }
+
+        .generate-btn:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            text-shadow: none;
+        }
+
+        .audio-wrapper {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        audio {
+            width: 100%;
+            border-radius: 50px;
+        }
+
+        audio::-webkit-media-controls-panel {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .error {
+            color: #ff7675;
+            background: rgba(255, 118, 117, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+            border: 1px solid rgba(255, 118, 117, 0.3);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+        }
+
+        .feature-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(30, 41, 59, 0.8);
+            border-color: #0ea5e9;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.5rem;
+            color: #f8fafc;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* ---------------- Footer ---------------- */
+        /* Flex-shrink: 0 ensures the footer never collapses and stays strictly at the bottom */
+        footer {
+            flex-shrink: 0;
+            background: rgba(15, 23, 42, 1);
+            border-top: 1px solid var(--border-color);
+            padding: 2.5rem 5% 2rem;
+            width: 100%;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .socials {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .socials a {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .socials a:hover {
+            color: #0ea5e9;
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* ---------------- Animations ---------------- */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-satellite-dish"></i>
+            VoiceCraft AI
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Architecture</a></li>
+                <li><a href="#">Models</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Advanced Urdu <span class="gradient-text">Speech Synthesis</span></h1>
+            <p>Powered by local neural models. Experience high-fidelity, offline text-to-speech generation directly in
+                your browser.</p>
+        </section>
+
+        <section class="app-card">
+            <div class="input-group">
+                <textarea id="text-input" dir="rtl" placeholder="یہاں اردو میں کچھ بھی لکھیں..."></textarea>
+            </div>
+
+        <button id="generate-btn" class="generate-btn" onclick="generateAudio()">
+            <div class="spinner" id="btn-spinner"></div>
+            <span id="btn-text">Generate Neural Audio</span>
+            <i class="fas fa-play" id="btn-icon"></i>
+        </button>
+            <p id="error-msg" class="error"></p>
+
+            <div class="audio-wrapper" id="audio-container">
+                <h4 style="margin-bottom: 10px; color: var(--text-muted); font-size: 0.9rem;">Generation Complete</h4>
+                <audio id="audio-player" controls></audio>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-microchip"></i></div>
+                <h3>Local Inference</h3>
+                <p>Runs entirely on your local PyTorch environment ensuring zero latency from network calls and total
+                    data privacy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-language"></i></div>
+                <h3>Native Urdu Support</h3>
+                <p>Custom tokenization optimized specifically for Nastaliq script and accurate Urdu pronunciation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                <h3>High Performance</h3>
+                <p>Utilizes optimized VITS architecture for rapid waveform generation via Scipy.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="font-size: 1.2rem;">
+                <i class="fas fa-satellite-dish"></i> VoiceCraft AI
+            </div>
+            <div class="socials">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fas fa-globe"></i></a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 Awaz AI Solutions. Engineered for accuracy.
+        </div>
+    </footer>
+
+    <script>
+        async function generateAudio() {
+            const text = document.getElementById('text-input').value;
+            const btn = document.getElementById('generate-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnSpinner = document.getElementById('btn-spinner');
+            const btnIcon = document.getElementById('btn-icon');
+            const audioContainer = document.getElementById('audio-container');
+            const audioPlayer = document.getElementById('audio-player');
+            const errorMsg = document.getElementById('error-msg');
+
+            if (!text.trim()) {
+                errorMsg.innerText = "Please enter some Urdu text first.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btnText.innerText = "Processing Audio...";
+            btnSpinner.style.display = 'block';
+            btnIcon.style.display = 'none';
+            errorMsg.style.display = 'none';
+            audioContainer.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+
+                const rawText = await response.text();
+
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                } catch (parseError) {
+                    console.error("Raw server response:", rawText);
+                    throw new Error("Server crashed. Check your Python terminal for the real error.");
+                }
+
+                if (response.ok) {
+                    audioPlayer.src = data.audio_url;
+                    audioContainer.style.display = 'block';
+                    audioPlayer.play();
+                } else {
+                    throw new Error(data.error || 'Something went wrong on the server');
+                }
+            } catch (error) {
+                errorMsg.innerText = error.message;
+                errorMsg.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btnText.innerText = "Generate Neural Audio";
+                btnSpinner.style.display = 'none';
+                btnIcon.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>
